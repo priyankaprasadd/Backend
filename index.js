@@ -9,9 +9,16 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, "public")));
 
+//app.get() → Get/request data
 app.get('/', function(req, res){       //express,  //here function is request handler
     fs.readdir(`./files`, function(err, files){       //node,  //here function is callback
         res.render("index", {files :files});
+    })
+})
+
+app.post('/create', function(req, res){      //app.post() → Send/submit data
+    fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details, function(err){
+        res.redirect('/');
     })
 })
 
@@ -31,12 +38,6 @@ app.post('/edit', function(req,res){
     fs.rename(`./files/${req.body.previous}`, `./files/${req.body.new}.txt`, function(err){
         res.redirect("/");
     });
-})
-
-app.post('/create', function(req, res){
-    fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details, function(err){
-        res.redirect('/');
-    })
 })
 
 app.listen(3000);
